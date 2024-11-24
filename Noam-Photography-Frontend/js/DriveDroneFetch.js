@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         size: photo.size ? parseInt(photo.size) : 0,
         url: `https://lh5.googleusercontent.com/d/${photo.id}`,
       }));
-  console.log(mappedPhotos)
+ 
       // Limit the number of photos displayed (e.g., only the first 10)
       const limitedPhotos = mappedPhotos.slice(79,110);
 
