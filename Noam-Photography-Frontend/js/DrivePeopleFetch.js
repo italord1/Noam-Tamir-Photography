@@ -12,17 +12,17 @@ document.addEventListener("DOMContentLoaded", () => {
           size: photo.size ? parseInt(photo.size) : 0,
           url: `https://lh5.googleusercontent.com/d/${photo.id}`,
         }));
- 
+        console.log(mappedPhotos)
         // Limit the number of photos displayed (e.g., only the first 10)
-        const limitedPhotos = mappedPhotos.slice(151, 166);
+        const limitedPhotos = mappedPhotos.slice(167, 169);
   
         // Display the first limited photo as the cover
         const selectedPhoto = limitedPhotos[8];
         if (selectedPhoto) {
-          const campignCover = document.getElementById("campignCover");
-          if (campignCover) {
-            campignCover.src = selectedPhoto.url;
-            campignCover.alt = selectedPhoto.name;
+          const PeopleCover = document.getElementById("PeopleCover");
+          if (PeopleCover) {
+            PeopleCover.src = selectedPhoto.url;
+            PeopleCover.alt = selectedPhoto.name;
           }
         }
   
