@@ -14,12 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }));
         console.log(mappedPhotos)
         // Limit the number of photos displayed (e.g., only the first 10)
-        const limitedPhotos = mappedPhotos.slice(167, 218);
+        const limitedPhotos = mappedPhotos.slice(219, 258);
   
         // Display the first limited photo as the cover
-        const selectedPhoto = limitedPhotos[1];
+        const selectedPhoto = limitedPhotos[4];
         if (selectedPhoto) {
-          const PeopleCover = document.getElementById("PeopleCover");
+          const PeopleCover = document.getElementById("FasionCover");
           if (PeopleCover) {
             PeopleCover.src = selectedPhoto.url;
             PeopleCover.alt = selectedPhoto.name;
