@@ -1,5 +1,6 @@
 
 
+
 document.addEventListener("DOMContentLoaded", () => {
     const fetchPhotos = async () => {
       try {
