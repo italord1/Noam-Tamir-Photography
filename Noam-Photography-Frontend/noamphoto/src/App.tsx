@@ -1,35 +1,19 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 
-
+import Navbar from "./components/NavBar";
 import Home from "./pages/Home";
 import Categories from "./pages/Categories";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <Router>
       <div className="app-container">
-        {/* navbar */}
-        <nav className="navbar">
-          <div className="logo">Noam Tamir Photography</div>
-          <ul className="nav-links">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/categories">Categories</Link></li>
-            <li><Link to="/about">About</Link></li>
-            <li><Link to="/contact">Contact</Link></li>
-            <li>
-              <a 
-                href="https://instagram.com/noamtamirphoto" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <img src="/instagram.svg" alt="Instagram" className="insta-icon" />
-              </a>
-            </li>
-          </ul>
-        </nav>
+       
+        <Navbar />
 
         {/* main content */}
         <main>
@@ -42,9 +26,7 @@ function App() {
         </main>
 
         {/* footer */}
-        <footer className="footer">
-          © {new Date().getFullYear()} Noam Tamir Photography | Built by Itai Glipoliti
-        </footer>
+         <Footer />
       </div>
     </Router>
   );

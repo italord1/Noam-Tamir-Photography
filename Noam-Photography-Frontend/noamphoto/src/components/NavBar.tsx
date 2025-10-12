@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import "../App.css";
+import "../Styles/navbar.css";
+
 
 function Navbar() {
+
+  
   return (
     <nav className="navbar">
       <div className="logo">Noam Tamir Photography</div>
