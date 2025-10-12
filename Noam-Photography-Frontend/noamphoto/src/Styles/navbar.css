@@ -1,80 +1,64 @@
-/* === NAVBAR === */
 .navbar {
-  position:fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(10px);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 60px;
+  padding: 20px 40px;
+  background-color: #0a0a0a;
+  color: #f5f5f5;
+  position: sticky;
+  top: 0;
   z-index: 1000;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: background 0.3s ease;
 }
 
-/* Logo */
 .logo {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 600;
-  letter-spacing: 1px;
-  color: #ffffff;
-  text-transform: uppercase;
 }
 
-/* Nav links */
 .nav-links {
-  list-style: none;
   display: flex;
-  align-items: center;
   gap: 30px;
+  list-style: none;
 }
 
 .nav-links li a {
-  color: #ddd;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s, transform 0.2s;
+  color: #f5f5f5;
+  font-size: 1.1rem;
 }
 
 .nav-links li a:hover {
   color: #00bcd4;
-  transform: translateY(-2px);
 }
 
-/* Instagram icon */
-.insta-icon {
-  width: 22px;
-  height: 22px;
-  filter: invert(1);
-  opacity: 0.85;
-  transition: opacity 0.3s, transform 0.2s;
+/* hamburger icon default hidden */
+.hamburger {
+  display: none;
+  cursor: pointer;
 }
 
-.insta-icon:hover {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-/* === RESPONSIVE DESIGN === */
-@media (max-width: 1024px) {
-  .navbar {
-    padding: 15px 40px;
-  }
-}
-
+/* mobile view */
 @media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
   .nav-links {
-    display: none;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background-color: #111;
+    flex-direction: column;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    gap: 20px;
+    text-align: center;
+    transition: max-height 0.3s ease;
   }
 
-  .navbar {
-    justify-content: center;
-  }
-
-  .logo {
-    font-size: 1.2rem;
+  .nav-links.active {
+    max-height: 250px;
+    padding: 20px 0;
   }
 }
-
