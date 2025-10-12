@@ -1,0 +1,104 @@
+/* === Categories Section === */
+.categories {
+  padding: 80px 20px;
+  background: linear-gradient(to bottom right, #0a0a0a, #1c1c1c);
+  color: #fff;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.categories h2 {
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: linear-gradient(to right, #00bcd4, #4caf50);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* === Grid Layout === */
+.categories .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* === Category Card === */
+.category-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  background-color: #111;
+}
+
+.category-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  transition: transform 0.5s ease, opacity 0.4s ease;
+}
+
+.category-card h3 {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  transition: background 0.3s ease;
+}
+
+/* === Hover Effects === */
+.category-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 255, 200, 0.3);
+}
+
+.category-card:hover img {
+  transform: scale(1.1);
+  opacity: 0.9;
+}
+
+.category-card:hover h3 {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* === Responsive Design === */
+@media (max-width: 768px) {
+  .categories h2 {
+    font-size: 2rem;
+  }
+
+  .category-card img {
+    height: 220px;
+  }
+
+  .category-card h3 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories {
+    padding: 50px 10px;
+  }
+
+  .categories h2 {
+    font-size: 1.8rem;
+  }
+
+  .category-card img {
+    height: 200px;
+  }
+}

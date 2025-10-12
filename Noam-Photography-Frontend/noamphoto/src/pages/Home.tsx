@@ -6,7 +6,7 @@ function Home() {
     <section className="home">
       <div className="hero">
         <h1>Capturing the movement of life through the lens</h1>
-        <p>Water sports • Portraits • video • drone • fation </p>
+        <p>Water sports • Portraits • video • drone • fashion </p>
         <a href="/categories" className="btn">Explore Gallery</a>
       </div>
     </section>

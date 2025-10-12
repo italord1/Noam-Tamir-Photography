@@ -1,3 +1,7 @@
+
+import "../Styles/Categories.css";
+
+
 interface Category {
   name: string;
   image: string;
