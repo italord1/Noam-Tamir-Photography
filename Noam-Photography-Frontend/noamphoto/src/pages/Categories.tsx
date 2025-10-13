@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../Styles/Categories.css";
 
 interface Category {
@@ -14,12 +14,12 @@ interface Photo {
 
 const categories: Category[] = [
   { name: "Fashion", folder: "fashion" },
-  { name: "Documentary", folder: "documentary" },
-  { name: "Video", folder: "video" },
   { name: "Watersport", folder: "watersport" },
   { name: "Portrait", folder: "portrait" },
   { name: "Campign", folder: "campign" },
   { name: "Drone", folder: "drone" },
+  { name: "Documentary", folder: "documentary" },
+  { name: "Video", folder: "video" },
 ];
 
 function Categories() {
@@ -41,14 +41,17 @@ function Categories() {
     });
   }, []);
 
+ console.log(photos)
+
   return (
     <section className="categories">
       <h2>Photo Categories</h2>
       <div className="grid">
         {categories.map((cat) => {
           const categoryPhotos = photos[cat.folder] || [];
-          const preview = categoryPhotos[0]?.url;
-
+        
+          const preview = categoryPhotos[5]?.url;
+         
           return (
             <div key={cat.folder} className="category-card">
               {preview ? (
