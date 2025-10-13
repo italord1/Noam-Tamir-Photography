@@ -90,7 +90,7 @@ app.get('/api/photos/:category', async (req, res) => {
       .map((file) => ({
         id: file.id,
         name: file.name,
-        url: `https://drive.google.com/uc?export=view&id=${file.id}`,
+        url: `https://lh5.googleusercontent.com/d/${file.id}`,
       }));
 
     res.json({ category, images });
@@ -118,7 +118,7 @@ app.get('/api/photos', async (req, res) => {
             category,
             id: file.id,
             name: file.name,
-            url: `https://drive.google.com/uc?export=view&id=${file.id}`,
+            url: `https://lh5.googleusercontent.com/d/${file.id}`,
           }));
 
         allPhotos.push(...images);
