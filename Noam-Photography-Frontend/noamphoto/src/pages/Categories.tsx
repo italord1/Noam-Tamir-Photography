@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import "../Styles/Categories.css";
+import styles from "../Styles/Categories.module.css";
+import { Link } from "react-router-dom";
 
 interface Category {
   name: string;
@@ -41,25 +42,26 @@ function Categories() {
     });
   }, []);
 
- console.log(photos)
+  console.log(photos)
 
   return (
-    <section className="categories">
+    <section className={styles.categories}>
       <h2>Photo Categories</h2>
-      <div className="grid">
+      <div className={styles.grid}>
         {categories.map((cat) => {
           const categoryPhotos = photos[cat.folder] || [];
-        
           const preview = categoryPhotos[5]?.url;
-         
+
           return (
-            <div key={cat.folder} className="category-card">
-              {preview ? (
-                <img src={preview} alt={cat.name} />
-              ) : (
-                <div className="loading">Loading...</div>
-              )}
-              <h3>{cat.name}</h3>
+            <div key={cat.folder} className={styles.categoryCard}>
+              <Link to={`/category/${cat.folder}`}>
+                {preview ? (
+                  <img src={preview} alt={cat.name} />
+                ) : (
+                  <div className={styles.loading}>Loading...</div>
+                )}
+                <h3>{cat.name}</h3>
+              </Link>
             </div>
           );
         })}

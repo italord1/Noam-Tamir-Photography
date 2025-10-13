@@ -1,0 +1,48 @@
+.categoryPage {
+  padding: 60px 20px;
+  color: #fff;
+  background: linear-gradient(to bottom right, #0a0a0a, #111111);
+  min-height: 100vh;
+}
+
+.categoryPage a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.categoryPage h2 {
+  font-size: 2.5rem;
+  margin: 20px 0 40px;
+  letter-spacing: 2px;
+}
+
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.photoCard {
+  overflow: hidden;
+  border-radius: 12px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.photoCard img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.photoCard:hover img {
+  transform: scale(1.1);
+}
+
+.photoCard:hover {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}

@@ -7,6 +7,7 @@ import Categories from "./pages/Categories";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Footer from "./components/Footer";
+import CategoryPage from "./pages/CategoryPage";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/categories" element={<Categories />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/category/:folder" element={<CategoryPage />} />
           </Routes>
         </main>
 
