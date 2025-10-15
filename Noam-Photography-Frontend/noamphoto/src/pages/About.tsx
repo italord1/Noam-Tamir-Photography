@@ -76,8 +76,8 @@ function About() {
               <div
                 key={photo.id}
                 className="gallery-item"
-                style={{ backgroundImage: `url(${photo.url})` }}
-              ></div>
+               
+              > <img src={photo.url} alt={photo.name} loading="lazy" /></div>
             ))}
           </div>
         )}
