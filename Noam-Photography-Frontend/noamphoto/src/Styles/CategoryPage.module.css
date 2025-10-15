@@ -5,44 +5,85 @@
   min-height: 100vh;
 }
 
+
 .categoryPage a {
-  color: #fff;
+  color: #00b4db;
   text-decoration: none;
   font-size: 1rem;
   margin-bottom: 20px;
   display: inline-block;
+  transition: color 0.3s ease;
 }
+
+.categoryPage a:hover {
+  color: #00e5ff;
+}
+
 
 .categoryPage h2 {
   font-size: 2.5rem;
   margin: 20px 0 40px;
   letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  background: linear-gradient(to right, #00b4db, #0083b0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
+
 
 .photoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  justify-items: center;
+  align-items: center;
 }
 
+
 .photoCard {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 14px;
   overflow: hidden;
-  border-radius: 12px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  background: #111;
 }
+
 
 .photoCard img {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: 100%;
+  object-fit: cover; 
+  object-position: center;
   display: block;
-  transition: transform 0.3s;
+  transition: transform 0.4s ease;
+}
+
+
+.photoCard:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
 }
 
 .photoCard:hover img {
   transform: scale(1.1);
 }
 
-.photoCard:hover {
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+@media (max-width: 768px) {
+  .photoGrid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+  }
+
+  .photoCard {
+    aspect-ratio: 1 / 1;
+  }
+
+  .categoryPage h2 {
+    font-size: 2rem;
+  }
 }
