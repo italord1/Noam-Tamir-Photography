@@ -22,6 +22,7 @@ app.use(cors());
 app.post('/send-email', async (req, res) => {
   const { fname, lname, email, subject, message } = req.body;
 
+  
   // Configure Nodemailer
   const transporter = nodemailer.createTransport({
     service: 'gmail',
