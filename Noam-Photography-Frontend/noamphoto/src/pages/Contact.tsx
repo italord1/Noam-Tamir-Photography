@@ -6,6 +6,7 @@ function Contact() {
     fname: "",
     lname: "",
     email: "",
+    phone: "",
     subject: "",
     message: "",
   });
@@ -29,7 +30,7 @@ function Contact() {
 
       if (res.ok) {
         setStatus("✅ Message sent successfully!");
-        setFormData({ fname: "", lname: "", email: "", subject: "", message: "" });
+        setFormData({ fname: "", lname: "", email: "", phone: "", subject: "", message: "" });
       } else {
         setStatus("❌ Error sending message. Please try again.");
       }
@@ -39,7 +40,7 @@ function Contact() {
     }
   };
 
- return (
+  return (
     <section className="contact">
       <h2>Contact</h2>
       <form onSubmit={handleSubmit}>
@@ -64,6 +65,14 @@ function Contact() {
           type="email"
           placeholder="Your email"
           value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="phone"
+          type="tel"
+          placeholder="Phone number"
+          value={formData.phone}
           onChange={handleChange}
           required
         />

@@ -20,7 +20,7 @@ app.use(cors());
 // ✉️ EMAIL ROUTE
 // =============================
 app.post('/send-email', async (req, res) => {
-  const { fname, lname, email, subject, message } = req.body;
+  const { fname, lname, email, phone, subject, message } = req.body;
 
   
   // Configure Nodemailer
@@ -36,7 +36,7 @@ app.post('/send-email', async (req, res) => {
     from: email,
     to: process.env.EMAIL_USER,
     subject: `Contact Form Submission: ${subject}`,
-    text: `Name: ${fname} ${lname}\nEmail: ${email}\nMessage:\n${message}`,
+    text: `Name: ${fname} ${lname}\nEmail: ${email}\n Phone: ${phone}\n Message:\n${message}`,
   };
 
   try {
