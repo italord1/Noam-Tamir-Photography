@@ -48,14 +48,14 @@ function CategoryPage() {
           {media.map((item) => (
             <div key={item.id} className={styles.photoCard}>
               {item.type === "video" ? (
-                <video
-                  src={item.url}
-                  muted
-                  loop
-                  controls
-                  playsInline
+                <iframe
+                  src={`https://drive.google.com/file/d/${item.id}/preview`}
+                  width="100%"
+                  height="300px"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
                   className={styles.videoPreview}
-                />
+                ></iframe>
               ) : (
                 <img
                   src={item.url}
