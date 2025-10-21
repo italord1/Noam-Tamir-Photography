@@ -101,7 +101,7 @@ app.get('/api/media/:category', async (req, res) => {
         id: file.id,
         name: file.name,
         type: 'video',
-        url: `https://lh3.googleusercontent.com/d/${file.id}`,
+        url: `https://drive.google.com/file/d/${file.id}/preview`,
       }));
 
     // Return both in one response

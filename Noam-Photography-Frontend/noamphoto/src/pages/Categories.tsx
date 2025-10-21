@@ -12,6 +12,7 @@ interface Media {
   name: string;
   url: string;
   type: "image" | "video";
+  thumbnail?: string; // optional thumbnail URL for videos
 }
 
 const categories: Category[] = [
@@ -28,7 +29,6 @@ function Categories() {
   const [media, setMedia] = useState<Record<string, Media[]>>({});
 
   useEffect(() => {
-    // Fetch media (images + videos) for each category
     categories.forEach(async (cat) => {
       try {
         const res = await fetch(`http://localhost:3000/api/media/${cat.folder}`);
@@ -47,33 +47,33 @@ function Categories() {
     });
   }, []);
 
-  console.log(media);
-
   return (
     <section className={styles.categories}>
       <h2>Photo & Video Categories</h2>
       <div className={styles.grid}>
         {categories.map((cat) => {
           const categoryMedia = media[cat.folder] || [];
-          const preview = categoryMedia[5] || categoryMedia[0]; // fallback if not enough items
+          const preview = categoryMedia[5] || categoryMedia[0]; // fallback
 
           return (
             <div key={cat.folder} className={styles.categoryCard}>
               <Link to={`/category/${cat.folder}`}>
                 {preview ? (
                   preview.type === "video" ? (
-                    <video
+                    // Use iframe if video
+                    <iframe
                       src={preview.url}
-                      muted
-                      autoPlay
-                      loop
-                      playsInline
+                      title={preview.name}
                       className={styles.previewVideo}
+                     
+                      allow="autoplay; encrypted-media"
+                      allowFullScreen
                     />
                   ) : (
+                    // Use image if not video
                     <img
                       src={preview.url}
-                      alt={cat.name}
+                      alt={preview.name}
                       className={styles.previewImage}
                     />
                   )
