@@ -22,7 +22,7 @@ app.use(cors());
 app.post('/send-email', async (req, res) => {
   const { fname, lname, email, phone, subject, message } = req.body;
 
-  
+
   // Configure Nodemailer
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -66,8 +66,8 @@ try {
   FOLDER_MAP = {};
 }
 
-// ✅ Route to fetch photos from a specific category (folder)
-app.get('/api/photos/:category', async (req, res) => {
+// ✅ Route to fetch photos and videos from a specific category (folder)
+app.get('/api/media/:category', async (req, res) => {
   const category = req.params.category.toLowerCase();
   const folderId = FOLDER_MAP[category];
 
@@ -85,21 +85,33 @@ app.get('/api/photos/:category', async (req, res) => {
       return res.status(404).json({ error: 'No files found in this folder' });
     }
 
-    // Only include image files
+    // Separate images and videos by MIME type
     const images = data.files
       .filter((file) => file.mimeType && file.mimeType.startsWith('image/'))
       .map((file) => ({
         id: file.id,
         name: file.name,
+        type: 'image',
         url: `https://lh5.googleusercontent.com/d/${file.id}`,
       }));
 
-    res.json({ category, images });
+    const videos = data.files
+      .filter((file) => file.mimeType && file.mimeType.startsWith('video/'))
+      .map((file) => ({
+        id: file.id,
+        name: file.name,
+        type: 'video',
+        url: `https://lh3.googleusercontent.com/d/${file.id}`,
+      }));
+
+    // Return both in one response
+    res.json({ category, images, videos });
   } catch (error) {
-    console.error(`Error fetching photos for ${category}:`, error);
-    res.status(500).json({ error: 'Error fetching photos' });
+    console.error(`Error fetching media for ${category}:`, error);
+    res.status(500).json({ error: 'Error fetching media' });
   }
 });
+
 
 // ✅ Route to fetch photos from all categories at once
 app.get('/api/photos', async (req, res) => {

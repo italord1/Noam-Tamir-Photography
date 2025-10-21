@@ -2,52 +2,73 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import styles from "../Styles/CategoryPage.module.css";
 
-
-interface Photo {
-    id: string;
-    name: string;
-    url: string;
+interface Media {
+  id: string;
+  name: string;
+  url: string;
+  type: "image" | "video";
 }
 
 function CategoryPage() {
-    const { folder } = useParams<{ folder: string }>();
-    const [photos, setPhotos] = useState<Photo[]>([]);
-    const [loading, setLoading] = useState(true);
+  const { folder } = useParams<{ folder: string }>();
+  const [media, setMedia] = useState<Media[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function fetchPhotos() {
-            if (!folder) return;
-            try {
-                const res = await fetch(`http://localhost:3000/api/photos/${folder}`);
-                const data = await res.json();
-                setPhotos(data.images || []);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchPhotos();
-    }, [folder]);
+  useEffect(() => {
+    async function fetchMedia() {
+      if (!folder) return;
+      try {
+        const res = await fetch(`http://localhost:3000/api/media/${folder}`);
+        const data = await res.json();
+        const combined: Media[] = [
+          ...(data.images || []),
+          ...(data.videos || []),
+        ];
+        setMedia(combined);
+      } catch (err) {
+        console.error(`Error loading media for ${folder}:`, err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchMedia();
+  }, [folder]);
 
-    return (
-        <section className={styles.categoryPage}>
-            <Link to="/Categories">← Back to Categories</Link>
-            <h2>{folder?.toUpperCase()}</h2>
+  return (
+    <section className={styles.categoryPage}>
+      <Link to="/Categories">← Back to Categories</Link>
+      <h2>{folder?.toUpperCase()}</h2>
 
-            {loading ? (
-                <div>Loading...</div>
-            ) : (
-                <div className={styles.photoGrid}>
-                    {photos.map((photo) => (
-                        <div key={photo.id} className={styles.photoCard}>
-                            <img src={photo.url} alt={photo.name} />
-                        </div>
-                    ))}
-                </div>
-            )}
-        </section>
-    );
+      {loading ? (
+        <div className={styles.loading}>Loading...</div>
+      ) : media.length === 0 ? (
+        <p>No media found in this category.</p>
+      ) : (
+        <div className={styles.photoGrid}>
+          {media.map((item) => (
+            <div key={item.id} className={styles.photoCard}>
+              {item.type === "video" ? (
+                <video
+                  src={item.url}
+                  muted
+                  loop
+                  controls
+                  playsInline
+                  className={styles.videoPreview}
+                />
+              ) : (
+                <img
+                  src={item.url}
+                  alt={item.name}
+                  className={styles.imagePreview}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }
 
 export default CategoryPage;

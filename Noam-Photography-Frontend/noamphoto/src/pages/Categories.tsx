@@ -7,10 +7,11 @@ interface Category {
   folder: string;
 }
 
-interface Photo {
+interface Media {
   id: string;
   name: string;
   url: string;
+  type: "image" | "video";
 }
 
 const categories: Category[] = [
@@ -24,39 +25,58 @@ const categories: Category[] = [
 ];
 
 function Categories() {
-  const [photos, setPhotos] = useState<Record<string, Photo[]>>({});
+  const [media, setMedia] = useState<Record<string, Media[]>>({});
 
   useEffect(() => {
-    // Fetch images for each category
+    // Fetch media (images + videos) for each category
     categories.forEach(async (cat) => {
       try {
-        const res = await fetch(`http://localhost:3000/api/photos/${cat.folder}`);
+        const res = await fetch(`http://localhost:3000/api/media/${cat.folder}`);
         const data = await res.json();
-        setPhotos((prev) => ({
+        const combined: Media[] = [
+          ...(data.images || []),
+          ...(data.videos || []),
+        ];
+        setMedia((prev) => ({
           ...prev,
-          [cat.folder]: data.images || [],
+          [cat.folder]: combined,
         }));
       } catch (err) {
-        console.error(`Error loading ${cat.name} photos:`, err);
+        console.error(`Error loading ${cat.name} media:`, err);
       }
     });
   }, []);
 
-  console.log(photos)
+  console.log(media);
 
   return (
     <section className={styles.categories}>
-      <h2>Photo Categories</h2>
+      <h2>Photo & Video Categories</h2>
       <div className={styles.grid}>
         {categories.map((cat) => {
-          const categoryPhotos = photos[cat.folder] || [];
-          const preview = categoryPhotos[5]?.url;
+          const categoryMedia = media[cat.folder] || [];
+          const preview = categoryMedia[5] || categoryMedia[0]; // fallback if not enough items
 
           return (
             <div key={cat.folder} className={styles.categoryCard}>
               <Link to={`/category/${cat.folder}`}>
                 {preview ? (
-                  <img src={preview} alt={cat.name} />
+                  preview.type === "video" ? (
+                    <video
+                      src={preview.url}
+                      muted
+                      autoPlay
+                      loop
+                      playsInline
+                      className={styles.previewVideo}
+                    />
+                  ) : (
+                    <img
+                      src={preview.url}
+                      alt={cat.name}
+                      className={styles.previewImage}
+                    />
+                  )
                 ) : (
                   <div className={styles.loading}>Loading...</div>
                 )}

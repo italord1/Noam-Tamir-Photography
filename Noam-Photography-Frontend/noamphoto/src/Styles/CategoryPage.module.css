@@ -31,26 +31,41 @@
   -webkit-text-fill-color: transparent;
 }
 
-
 .photoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-  justify-items: center;
-  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
 }
-
 
 .photoCard {
-  width: 100%;
-  max-width: 350px;
-  border-radius: 14px;
-  overflow: hidden;
   position: relative;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  overflow: hidden;
+  border-radius: 12px;
   background: #111;
 }
+
+.imagePreview,
+.videoPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.imagePreview:hover,
+.videoPreview:hover {
+  transform: scale(1.05);
+}
+
+.loading {
+  text-align: center;
+  color: #fff;
+  font-size: 1.2rem;
+  margin-top: 40px;
+}
+
 
 
 .photoCard img {
@@ -71,6 +86,8 @@
 .photoCard:hover img {
   transform: scale(1.1);
 }
+
+
 
 
 @media (max-width: 768px) {
