@@ -1,10 +1,11 @@
 import "../Styles/home.css";
+import myVideo from "../assets/videos/קייט בגבעה.mp4"
 
 function Home() {
   return (
     <section className="home">
       <video
-        src="https://drive.google.com/uc?export=download&id=1IaTyfuGfbBQyKt63OotgAAP_JGUwp2kL"
+        src={myVideo}
         autoPlay
         loop
         muted
@@ -21,5 +22,5 @@ function Home() {
   );
 }
 
-
 export default Home;
+

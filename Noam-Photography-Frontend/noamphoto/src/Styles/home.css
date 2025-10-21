@@ -15,18 +15,18 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
+  object-fit: cover;       /* ensures video covers the container */
+  object-position: center; /* keeps video centered */
   z-index: 0;
-  filter: brightness(0.6);
+  filter: brightness(0.5); /* darker for better text visibility */
 }
 
 /* === Hero text === */
 .hero-content {
   position: absolute;
-  top: 25%; /* moves text toward upper part of screen */
+  top: 50%;                /* vertically center */
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%); /* perfect centering */
   text-align: center;
   color: #fff;
   z-index: 1;
@@ -39,6 +39,7 @@
   margin-bottom: 20px;
   background: linear-gradient(to right, #00b4db, #0083b0);
   background-clip: text;
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -66,7 +67,9 @@
 /* === Responsive === */
 @media (max-width: 768px) {
   .hero-content {
-    top: 30%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
   }
 
   .hero-content h1 {
@@ -75,5 +78,9 @@
 
   .hero-content p {
     font-size: 1rem;
+  }
+
+  .btn {
+    padding: 10px 20px;
   }
 }
