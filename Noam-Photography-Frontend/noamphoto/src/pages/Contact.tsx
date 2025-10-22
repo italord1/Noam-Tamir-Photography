@@ -97,8 +97,8 @@ function Contact() {
       {status && <p className="status-message">{status}</p>}
 
       <div className="contact-info">
-        <p>📧 noam@example.com</p>
-        <p>📞 +972-50-123-4567</p>
+        <p>📧 noamphoto99@gmail.com</p>
+        <p>📞 +972-052-720-2308</p>
         <a href="https://wa.me/972501234567" target="_blank">WhatsApp</a>
       </div>
     </section>
