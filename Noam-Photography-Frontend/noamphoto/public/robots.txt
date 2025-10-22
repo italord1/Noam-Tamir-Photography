@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://noamphoto.onrender.com/sitemap.xml
