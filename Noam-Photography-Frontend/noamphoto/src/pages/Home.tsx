@@ -1,11 +1,11 @@
 import "../Styles/home.css";
-import myVideo from "../assets/videos/קייט בגבעה.mp4"
+
 
 function Home() {
   return (
     <section className="home">
       <video
-        src={myVideo}
+        src="/videos/kite_bageva.mp4"
         autoPlay
         loop
         muted
