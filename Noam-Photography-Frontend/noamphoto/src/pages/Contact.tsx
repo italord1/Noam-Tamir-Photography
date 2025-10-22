@@ -22,7 +22,7 @@ function Contact() {
     setStatus("Sending...");
 
     try {
-      const res = await fetch("http://localhost:3000/send-email", {
+      const res = await fetch("https://noam-tamir-photography.onrender.com/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

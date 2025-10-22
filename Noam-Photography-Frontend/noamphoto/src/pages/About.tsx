@@ -16,7 +16,7 @@ function About() {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/photos"); 
+        const res = await fetch("https://noam-tamir-photography.onrender.com/api/photos"); 
         const data = await res.json();
 
         if (!data || !Array.isArray(data.photos)) {

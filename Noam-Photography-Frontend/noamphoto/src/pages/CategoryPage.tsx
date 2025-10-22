@@ -18,7 +18,7 @@ function CategoryPage() {
     async function fetchMedia() {
       if (!folder) return;
       try {
-        const res = await fetch(`http://localhost:3000/api/media/${folder}`);
+        const res = await fetch(`https://noam-tamir-photography.onrender.com/api/media/${folder}`);
         const data = await res.json();
         const combined: Media[] = [
           ...(data.images || []),

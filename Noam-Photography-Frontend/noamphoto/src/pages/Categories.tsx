@@ -31,7 +31,7 @@ function Categories() {
   useEffect(() => {
     categories.forEach(async (cat) => {
       try {
-        const res = await fetch(`http://localhost:3000/api/media/${cat.folder}`);
+        const res = await fetch(`https://noam-tamir-photography.onrender.com/api/media/${cat.folder}`);
         const data = await res.json();
         const combined: Media[] = [
           ...(data.images || []),
