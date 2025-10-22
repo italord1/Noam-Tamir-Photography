@@ -99,7 +99,7 @@ function Contact() {
       <div className="contact-info">
         <p>📧 noamphoto99@gmail.com</p>
         <p>📞 +972-052-720-2308</p>
-        <a href="https://wa.me/972501234567" target="_blank">WhatsApp</a>
+        <a href="https://wa.me/9720527202308" target="_blank">WhatsApp</a>
       </div>
     </section>
   );
