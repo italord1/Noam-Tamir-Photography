@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
 import nodemailer from 'nodemailer';
+import fs from 'fs';
 
 // Load environment variables
 dotenv.config();
@@ -22,8 +23,6 @@ app.use(cors());
 app.post('/send-email', async (req, res) => {
   const { fname, lname, email, phone, subject, message } = req.body;
 
-
-  // Configure Nodemailer
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -36,7 +35,7 @@ app.post('/send-email', async (req, res) => {
     from: email,
     to: process.env.EMAIL_USER,
     subject: `Contact Form Submission: ${subject}`,
-    text: `Name: ${fname} ${lname}\nEmail: ${email}\n Phone: ${phone}\n Message:\n${message}`,
+    text: `Name: ${fname} ${lname}\nEmail: ${email}\nPhone: ${phone}\nMessage:\n${message}`,
   };
 
   try {
@@ -49,13 +48,12 @@ app.post('/send-email', async (req, res) => {
 });
 
 // =============================
-// 📸 GOOGLE DRIVE PHOTOS ROUTES
+// 📸 GOOGLE DRIVE MEDIA ROUTES
 // =============================
 
 const API_KEY = process.env.GOOGLE_API_KEY;
 
-// === Folder mapping for each photo category ===
-
+// === Folder mapping from .env ===
 let FOLDER_MAP = {};
 try {
   if (process.env.FOLDER_MAP) {
@@ -66,81 +64,140 @@ try {
   FOLDER_MAP = {};
 }
 
-// ✅ Route to fetch photos and videos from a specific category (folder)
+// === Caching Setup ===
+const CACHE_FILE = './mediaCache.json';
+let folderCache = {};
+
+// Load cache from file (persistent between restarts)
+if (fs.existsSync(CACHE_FILE)) {
+  try {
+    folderCache = JSON.parse(fs.readFileSync(CACHE_FILE));
+    console.log('✅ Cache loaded from file');
+  } catch (err) {
+    console.error('⚠️ Error loading cache file:', err);
+  }
+}
+
+function saveCache() {
+  fs.writeFileSync(CACHE_FILE, JSON.stringify(folderCache, null, 2));
+}
+
+async function fetchMediaFromDrive(folderId) {
+  const response = await fetch(
+    `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=${API_KEY}&fields=files(id,name,mimeType,modifiedTime,size)`
+  );
+  const data = await response.json();
+  return data.files || [];
+}
+
+// ✅ Route to fetch media from specific category
 app.get('/api/media/:category', async (req, res) => {
   const category = req.params.category.toLowerCase();
   const folderId = FOLDER_MAP[category];
 
-  if (!folderId) {
-    return res.status(404).json({ error: 'Category not found' });
-  }
+  if (!folderId) return res.status(404).json({ error: 'Category not found' });
 
   try {
-    const response = await fetch(
-      `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=${API_KEY}&fields=files(id,name,mimeType,size)`
-    );
-    const data = await response.json();
+    const newFiles = await fetchMediaFromDrive(folderId);
+    const newHash = newFiles.map(f => ({ id: f.id, modifiedTime: f.modifiedTime }));
 
-    if (!data.files) {
-      return res.status(404).json({ error: 'No files found in this folder' });
+    const lastCache = folderCache[category];
+
+    // 🔁 Compare new and old hash to detect changes
+    const unchanged =
+      lastCache &&
+      JSON.stringify(lastCache.hash) === JSON.stringify(newHash);
+
+    if (unchanged) {
+      console.log(`♻️ Using cached data for category: ${category}`);
+      return res.json(lastCache.data);
     }
 
-    // Separate images and videos by MIME type
-    const images = data.files
-      .filter((file) => file.mimeType && file.mimeType.startsWith('image/'))
-      .map((file) => ({
-        id: file.id,
-        name: file.name,
+    // If changed or no cache → rebuild data
+    console.log(`🔄 Fetching new data for category: ${category}`);
+
+    const images = newFiles
+      .filter(f => f.mimeType?.startsWith('image/'))
+      .map(f => ({
+        id: f.id,
+        name: f.name,
         type: 'image',
-        url: `https://lh5.googleusercontent.com/d/${file.id}`,
+        url: `https://lh5.googleusercontent.com/d/${f.id}`,
       }));
 
-    const videos = data.files
-      .filter((file) => file.mimeType && file.mimeType.startsWith('video/'))
-      .map((file) => ({
-        id: file.id,
-        name: file.name,
+    const videos = newFiles
+      .filter(f => f.mimeType?.startsWith('video/'))
+      .map(f => ({
+        id: f.id,
+        name: f.name,
         type: 'video',
-        url: `https://drive.google.com/file/d/${file.id}/preview`,
+        url: `https://drive.google.com/file/d/${f.id}/preview`,
       }));
 
-    // Return both in one response
-    res.json({ category, images, videos });
+    const result = { category, images, videos };
+
+    folderCache[category] = {
+      hash: newHash,
+      data: result,
+      updatedAt: new Date().toISOString(),
+    };
+
+    saveCache();
+
+    res.json(result);
   } catch (error) {
-    console.error(`Error fetching media for ${category}:`, error);
+    console.error(`❌ Error fetching media for ${category}:`, error);
     res.status(500).json({ error: 'Error fetching media' });
   }
 });
 
-
 // ✅ Route to fetch photos from all categories at once
 app.get('/api/photos', async (req, res) => {
-  const allPhotos = [];
-
   try {
+    const allPhotos = [];
+
     for (const [category, folderId] of Object.entries(FOLDER_MAP)) {
-      const response = await fetch(
-        `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=${API_KEY}&fields=files(id,name,mimeType,size)`
-      );
-      const data = await response.json();
+      const newFiles = await fetchMediaFromDrive(folderId);
+      const newHash = newFiles.map(f => ({ id: f.id, modifiedTime: f.modifiedTime }));
+      const lastCache = folderCache[category];
 
-      if (data.files) {
-        const images = data.files
-          .filter((file) => file.mimeType && file.mimeType.startsWith('image/'))
-          .map((file) => ({
-            category,
-            id: file.id,
-            name: file.name,
-            url: `https://lh5.googleusercontent.com/d/${file.id}`,
-          }));
+      const unchanged =
+        lastCache &&
+        JSON.stringify(lastCache.hash) === JSON.stringify(newHash);
 
-        allPhotos.push(...images);
+      if (unchanged) {
+        console.log(`♻️ Using cached data for category: ${category}`);
+        allPhotos.push(
+          ...lastCache.data.images.map(img => ({ ...img, category }))
+        );
+        continue;
       }
+
+      console.log(`🔄 Fetching new data for category: ${category}`);
+
+      const images = newFiles
+        .filter(f => f.mimeType?.startsWith('image/'))
+        .map(f => ({
+          id: f.id,
+          name: f.name,
+          url: `https://lh5.googleusercontent.com/d/${f.id}`,
+          category,
+        }));
+
+      folderCache[category] = {
+        hash: newHash,
+        data: { category, images, videos: [] },
+        updatedAt: new Date().toISOString(),
+      };
+
+      allPhotos.push(...images);
     }
+
+    saveCache();
 
     res.json({ photos: allPhotos });
   } catch (error) {
-    console.error('Error fetching all photos:', error);
+    console.error('❌ Error fetching all photos:', error);
     res.status(500).json({ error: 'Error fetching all photos' });
   }
 });
