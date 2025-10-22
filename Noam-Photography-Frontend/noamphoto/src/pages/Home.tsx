@@ -5,7 +5,7 @@ function Home() {
   return (
     <section className="home">
       <video
-        src="/videos/kite_bageva.mp4"
+        src="https://res.cloudinary.com/dhgluhvky/video/upload/v1761125035/kite_bageva_ybn72h.mp4"
         autoPlay
         loop
         muted
@@ -22,3 +22,5 @@ function Home() {
 }
 
 export default Home;
+
+
