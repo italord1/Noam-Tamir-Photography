@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import styles from "../Styles/Categories.module.css";
 import { Link } from "react-router-dom";
+import {
+  API_BASE_URL,
+  MEDIA_CATEGORIES,
+  type MediaCategory,
+  sanitizeIframeUrl,
+  sanitizeImageUrl,
+} from "../utils/security";
 
 interface Category {
   name: string;
-  folder: string;
+  folder: MediaCategory;
 }
 
 interface Media {
@@ -12,7 +19,6 @@ interface Media {
   name: string;
   url: string;
   type: "image" | "video";
-  thumbnail?: string; // optional thumbnail URL for videos
 }
 
 const categories: Category[] = [
@@ -25,24 +31,33 @@ const categories: Category[] = [
   { name: "Video", folder: "video" },
 ];
 
+function sanitizeMediaItem(item: Media): Media | null {
+  if (item.type === "video") {
+    const safeUrl = sanitizeIframeUrl(item.url);
+    return safeUrl ? { ...item, url: safeUrl } : null;
+  }
+  const safeUrl = sanitizeImageUrl(item.url);
+  return safeUrl ? { ...item, url: safeUrl } : null;
+}
+
 function Categories() {
   const [media, setMedia] = useState<Record<string, Media[]>>({});
 
   useEffect(() => {
-    categories.forEach(async (cat) => {
+    MEDIA_CATEGORIES.forEach(async (folder) => {
       try {
-        const res = await fetch(`https://noam-tamir-photography.onrender.com/api/media/${cat.folder}`);
+        const res = await fetch(`${API_BASE_URL}/api/media/${folder}`);
         const data = await res.json();
-        const combined: Media[] = [
-          ...(data.images || []),
-          ...(data.videos || []),
-        ];
+        const combined: Media[] = [...(data.images || []), ...(data.videos || [])]
+          .map(sanitizeMediaItem)
+          .filter((item): item is Media => item !== null);
+
         setMedia((prev) => ({
           ...prev,
-          [cat.folder]: combined,
+          [folder]: combined,
         }));
-      } catch (err) {
-        console.error(`Error loading ${cat.name} media:`, err);
+      } catch {
+        // ignore per-category errors
       }
     });
   }, []);
@@ -53,24 +68,23 @@ function Categories() {
       <div className={styles.grid}>
         {categories.map((cat) => {
           const categoryMedia = media[cat.folder] || [];
-          const preview = categoryMedia[5] || categoryMedia[0]; // fallback
+          const preview = categoryMedia[5] || categoryMedia[0];
 
           return (
             <div key={cat.folder} className={styles.categoryCard}>
               <Link to={`/category/${cat.folder}`}>
                 {preview ? (
                   preview.type === "video" ? (
-                    // Use iframe if video
                     <iframe
                       src={preview.url}
                       title={preview.name}
                       className={styles.previewVideo}
-                     
                       allow="autoplay; encrypted-media"
                       allowFullScreen
+                      sandbox="allow-scripts allow-same-origin allow-presentation"
+                      referrerPolicy="no-referrer"
                     />
                   ) : (
-                    // Use image if not video
                     <img
                       src={preview.url}
                       alt={preview.name}

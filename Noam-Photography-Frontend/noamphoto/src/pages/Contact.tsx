@@ -1,5 +1,6 @@
-import "../Styles/Contact.css"
+import "../Styles/Contact.css";
 import { useState } from "react";
+import { API_BASE_URL, validateContactPayload } from "../utils/security";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -10,7 +11,7 @@ function Contact() {
     subject: "",
     message: "",
   });
-
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -19,13 +20,25 @@ function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (honeypot) {
+      setStatus("✅ Message sent successfully!");
+      return;
+    }
+
+    const validated = validateContactPayload(formData);
+    if (!validated.ok) {
+      setStatus(`❌ ${validated.error}`);
+      return;
+    }
+
     setStatus("Sending...");
 
     try {
-      const res = await fetch("https://noam-tamir-photography.onrender.com/send-email", {
+      const res = await fetch(`${API_BASE_URL}/send-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(validated.data),
       });
 
       if (res.ok) {
@@ -34,8 +47,7 @@ function Contact() {
       } else {
         setStatus("❌ Error sending message. Please try again.");
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       setStatus("❌ Network error. Please try again.");
     }
   };
@@ -45,12 +57,23 @@ function Contact() {
       <h2>Contact</h2>
       <form onSubmit={handleSubmit}>
         <input
+          type="text"
+          name="website"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          className="honeypot"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+        />
+        <input
           name="fname"
           type="text"
           placeholder="First name"
           value={formData.fname}
           onChange={handleChange}
           required
+          maxLength={100}
         />
         <input
           name="lname"
@@ -59,6 +82,7 @@ function Contact() {
           value={formData.lname}
           onChange={handleChange}
           required
+          maxLength={100}
         />
         <input
           name="email"
@@ -67,6 +91,7 @@ function Contact() {
           value={formData.email}
           onChange={handleChange}
           required
+          maxLength={254}
         />
         <input
           name="phone"
@@ -75,6 +100,7 @@ function Contact() {
           value={formData.phone}
           onChange={handleChange}
           required
+          maxLength={30}
         />
         <input
           name="subject"
@@ -83,6 +109,7 @@ function Contact() {
           value={formData.subject}
           onChange={handleChange}
           required
+          maxLength={200}
         />
         <textarea
           name="message"
@@ -90,6 +117,7 @@ function Contact() {
           value={formData.message}
           onChange={handleChange}
           required
+          maxLength={5000}
         />
         <button type="submit">Send</button>
       </form>
@@ -99,7 +127,13 @@ function Contact() {
       <div className="contact-info">
         <p>📧 noamphoto99@gmail.com</p>
         <p>📞 +972-052-720-2308</p>
-        <a href="https://wa.me/9720527202308" target="_blank">WhatsApp</a>
+        <a
+          href="https://wa.me/9720527202308"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          WhatsApp
+        </a>
       </div>
     </section>
   );
